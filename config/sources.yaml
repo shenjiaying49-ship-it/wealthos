@@ -1,0 +1,113 @@
+# 信息源清单 — 全部经 2026-10-03 实测验证（见 wealth-os/research-notes/E）
+# tier: official(官方一手) / news(媒体) / newsletter(作者授权) / research(机构)
+# reliability: Primary / High / Medium / Low
+# enabled: false 的源保留配置不拉取（如 X 层、ZeroHedge 情绪参考）
+
+sources:
+  - id: fed_press
+    name: Federal Reserve Press
+    kind: rss
+    tier: official
+    reliability: Primary
+    url: https://www.federalreserve.gov/feeds/press_all.xml
+    interval_min: 30
+    enabled: true
+
+  - id: fed_monetary
+    name: Federal Reserve Monetary Policy
+    kind: rss
+    tier: official
+    reliability: Primary
+    url: https://www.federalreserve.gov/feeds/press_monetary.xml
+    interval_min: 30
+    enabled: true
+
+  - id: ecb_press
+    name: ECB Press
+    kind: rss
+    tier: official
+    reliability: Primary
+    url: https://www.ecb.europa.eu/rss/press.html
+    interval_min: 30
+    enabled: true
+
+  - id: cnbc_top
+    name: CNBC Top News
+    kind: rss
+    tier: news
+    reliability: High
+    url: https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114
+    interval_min: 15
+    enabled: true
+
+  - id: cnbc_markets
+    name: CNBC Markets
+    kind: rss
+    tier: news
+    reliability: High
+    url: https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258
+    interval_min: 15
+    enabled: true
+
+  - id: sa_currents
+    name: Seeking Alpha Market Currents
+    kind: rss
+    tier: news
+    reliability: Medium
+    url: https://seekingalpha.com/market_currents.xml
+    interval_min: 15
+    enabled: true
+
+  - id: gnews_fed
+    name: Google News · Federal Reserve
+    kind: rss
+    tier: news
+    reliability: Medium
+    url: https://news.google.com/rss/search?q=%22Federal+Reserve%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    interval_min: 30
+    enabled: true
+
+  - id: gnews_boj
+    name: Google News · Bank of Japan
+    kind: rss
+    tier: news
+    reliability: Medium
+    url: https://news.google.com/rss/search?q=%22Bank+of+Japan%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    interval_min: 30
+    enabled: true
+
+  - id: gnews_rates
+    name: Google News · interest rates markets
+    kind: rss
+    tier: news
+    reliability: Medium
+    url: https://news.google.com/rss/search?q=%22interest+rates%22+OR+%22rate+cut%22+OR+%22rate+hike%22+when:2d&hl=en-US&gl=US&ceid=US:en
+    interval_min: 30
+    enabled: true
+
+  # 以下为可选层，默认关闭 ------------------------------------------------
+  - id: wscn_global
+    name: 华尔街见闻·全球快讯
+    kind: wscn
+    tier: news
+    reliability: High
+    url: https://api-one-wscn.awtmt.com/apiv1/content/lives
+    interval_min: 10
+    enabled: true
+
+  - id: zerohedge
+    name: ZeroHedge（全文feed，情绪参考）
+    kind: rss
+    tier: news
+    reliability: Low
+    url: https://feeds.feedburner.com/zerohedge/feed
+    interval_min: 30
+    enabled: false
+
+  - id: x_list
+    name: X Intelligence（需自备 X API PPU key，合规层）
+    kind: x
+    tier: social
+    reliability: Low   # Signal ≠ Truth：仅作信号，须经验证层
+    url: ""
+    enabled: false

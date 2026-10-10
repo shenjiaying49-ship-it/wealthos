@@ -1,0 +1,73 @@
+# Financial Source Graph 种子（v1 骨架版，~60 实体）
+# 边权 0-1：粗粒度传导强度四档 0.1/0.3/0.6/0.9，仅供 relevance 排序，不做精确因果声明。
+# edge 语义: from --(type, weight)--> to
+# 摄入持仓后由代码自动挂 MY:* 节点（见 ingest/relevance.py）
+
+entities:
+  - {id: CB:FED, type: central_bank, name: 美联储, aliases: ["Federal Reserve", "Fed", "FOMC", "美联储", "美联储主席"]}
+  - {id: CB:ECB, type: central_bank, name: 欧洲央行, aliases: ["ECB", "European Central Bank", "欧央行", "欧洲央行"]}
+  - {id: CB:BOJ, type: central_bank, name: 日本央行, aliases: ["Bank of Japan", "BoJ", "日银", "日本央行", "日本银行"]}
+  - {id: CB:BOE, type: central_bank, name: 英国央行, aliases: ["Bank of England", "BoE", "英国央行"]}
+  - {id: CB:HKMA, type: central_bank, name: 香港金管局, aliases: ["HKMA", "Hong Kong Monetary Authority", "金管局"]}
+  - {id: CB:MAS, type: central_bank, name: 新加坡金管局, aliases: ["MAS", "Monetary Authority of Singapore"]}
+
+  - {id: CCY:USD, type: currency, name: 美元, aliases: ["USD", "dollar", "美元"]}
+  - {id: CCY:HKD, type: currency, name: 港币, aliases: ["HKD", "Hong Kong dollar", "港币", "港元"]}
+  - {id: CCY:JPY, type: currency, name: 日元, aliases: ["JPY", "yen", "日元", "日圆"]}
+  - {id: CCY:CNY, type: currency, name: 人民币, aliases: ["CNY", "yuan", "人民币"]}
+  - {id: CCY:EUR, type: currency, name: 欧元, aliases: ["EUR", "euro", "欧元"]}
+
+  - {id: RGN:US, type: region, name: 美国, aliases: ["U.S.", "US", "United States", "美国", "Wall Street", "美股"]}
+  - {id: RGN:HK, type: region, name: 香港, aliases: ["Hong Kong", "HK", "香港", "港股", "恒生"]}
+  - {id: RGN:JP, type: region, name: 日本, aliases: ["Japan", "Japanese", "日本", "日股", "日经", "Nikkei"]}
+  - {id: RGN:SG, type: region, name: 新加坡, aliases: ["Singapore", "新加坡"]}
+  - {id: RGN:CN, type: region, name: 中国, aliases: ["China", "Chinese", "中国", "A股", "人民币资产"]}
+  - {id: RGN:EU, type: region, name: 欧元区, aliases: ["Eurozone", "Europe", "欧洲", "欧元区"]}
+
+  - {id: MC:RATE, type: macro_concept, name: 政策利率, aliases: ["interest rate", "rate cut", "rate hike", "policy rate", "利率", "降息", "加息"]}
+  - {id: MC:INFL, type: macro_concept, name: 通胀, aliases: ["inflation", "CPI", "PCE", "通胀", "物价"]}
+  - {id: MC:GROWTH, type: macro_concept, name: 增长与就业, aliases: ["GDP", "recession", "jobs", "unemployment", "就业", "衰退", "经济增长"]}
+  - {id: MC:BOND, type: macro_concept, name: 债券市场, aliases: ["Treasury", "yield", "bond", "国债", "收益率", "债券"]}
+  - {id: MC:EQUITY, type: macro_concept, name: 股票市场, aliases: ["stock market", "S&P 500", "Nasdaq", "equity", "股市", "标普", "纳斯达克"]}
+  - {id: MC:CRYPTO, type: macro_concept, name: 加密资产, aliases: ["bitcoin", "BTC", "crypto", "比特币", "加密"]}
+  - {id: MC:CARRY, type: macro_concept, name: 套息交易, aliases: ["carry trade", "套息", "套利交易"]}
+
+edges:
+  # 央行 → 货币
+  - [CB:FED, sets_policy_for, CCY:USD, 0.9]
+  - [CB:ECB, sets_policy_for, CCY:EUR, 0.9]
+  - [CB:BOJ, sets_policy_for, CCY:JPY, 0.9]
+  - [CB:BOE, sets_policy_for, "CCY:GBP", 0.9]
+  - [CB:HKMA, pegs, CCY:HKD, 0.9]
+  # 央行 ↔ 概念
+  - [CB:FED, decides, MC:RATE, 0.9]
+  - [CB:ECB, decides, MC:RATE, 0.9]
+  - [CB:BOJ, decides, MC:RATE, 0.9]
+  - [CB:FED, targets, MC:INFL, 0.6]
+  # 宏观传导
+  - [MC:RATE, affects, MC:BOND, 0.9]
+  - [MC:RATE, affects_valuation_of, MC:EQUITY, 0.6]
+  - [MC:INFL, drives, MC:RATE, 0.6]
+  - [CCY:JPY, funds, MC:CARRY, 0.6]
+  - [MC:CARRY, affects_risk_appetite_of, MC:EQUITY, 0.3]
+  # 货币 ↔ 地区（地区风险传导到本币资产）
+  - [RGN:US, priced_in, CCY:USD, 0.6]
+  - [RGN:HK, priced_in, CCY:HKD, 0.6]
+  - [RGN:JP, priced_in, CCY:JPY, 0.6]
+  - [RGN:CN, priced_in, CCY:CNY, 0.6]
+  - [RGN:EU, priced_in, CCY:EUR, 0.6]
+  # 地区 → 市场概念
+  - [RGN:US, home_of, MC:EQUITY, 0.3]
+  - [RGN:US, home_of, MC:BOND, 0.3]
+  - [RGN:JP, home_of, MC:EQUITY, 0.3]
+
+# 常见持仓标的的静态画像（导入时若 instruments 表无记录则用此兜底，可被用户覆盖）
+instruments:
+  - {symbol: AAPL, name: Apple, asset_class: equity, currency: USD, region: RGN:US, sector: Technology, aliases: ["Apple", "AAPL"]}
+  - {symbol: MSFT, name: Microsoft, asset_class: equity, currency: USD, region: RGN:US, sector: Technology, aliases: ["Microsoft", "MSFT"]}
+  - {symbol: NVDA, name: NVIDIA, asset_class: equity, currency: USD, region: RGN:US, sector: Technology, aliases: ["NVIDIA", "NVDA"]}
+  - {symbol: VOO, name: Vanguard S&P500 ETF, asset_class: etf, currency: USD, region: RGN:US, sector: Broad, aliases: ["VOO"]}
+  - {symbol: "0700.HK", name: Tencent, asset_class: equity, currency: HKD, region: RGN:HK, sector: Technology, aliases: ["Tencent", "腾讯"]}
+  - {symbol: "1321.T", name: Nikkei 225 ETF (Nomura), asset_class: etf, currency: JPY, region: RGN:JP, sector: Broad, aliases: ["Nikkei 225 ETF", "1321"]}
+  - {symbol: "2833.HK", name: Hang Seng Index ETF, asset_class: etf, currency: HKD, region: RGN:HK, sector: Broad, aliases: ["恒指ETF"]}
+  - {symbol: BTC, name: Bitcoin, asset_class: crypto, currency: USD, region: RGN:US, sector: Crypto, aliases: ["Bitcoin"]}

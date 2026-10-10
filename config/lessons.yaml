@@ -1,0 +1,278 @@
+# Wealth Academy 种子课程（v1：12 课；MVP 后扩至 60）
+# prereq: 前置概念（须已 known 才优先安排）
+# importance 1-5；status 初始 unknown，由测验与阅读流转
+
+lessons:
+  - concept: compound_interest
+    domain: basics
+    title: 什么是复利？
+    prereq: []
+    importance: 5
+    body: |
+      复利是"利息生利息"：每期的收益加入本金，下一期一起计息。
+      10 万本金年化 6%，10 年后约 17.9 万——其中近 8 万是利息的利息。
+    example: 就像滚雪球：坡够长（时间）比坡够陡（收益率）更值得追求。
+    quiz:
+      q: 年化 6% 下，本金翻倍大约需要多少年？（72 法则）
+      options: ["6 年", "12 年", "20 年"]
+      answer: 1
+
+  - concept: inflation
+    domain: basics
+    title: 什么是通胀？
+    prereq: []
+    importance: 5
+    body: |
+      通胀是物价水平的持续上涨，它让"现金的购买力"每年缩水。
+      3% 通胀下，今天的 100 元，10 年后只能买到今天约 74 元的东西。
+    example: 现金不是"无风险"资产——它对购买力有确定性风险。
+    quiz:
+      q: 通胀主要侵蚀哪类资产的实际价值？
+      options: ["股票", "现金与活期存款", "黄金"]
+      answer: 1
+
+  - concept: risk_return
+    domain: basics
+    title: 风险与收益
+    prereq: []
+    importance: 4
+    body: |
+      收益是承担风险的补偿。同类资产中"明显更高收益"的报价，几乎总意味着
+      更高的亏损概率、更差的流动性或更复杂的条款——三者至少占其一。
+    example: 5% 的"保本高收益"产品值得先问：风险藏在哪？
+    quiz:
+      q: 收益率显著高于同类时，最合理的假设是？
+      options: ["捡到便宜", "风险/流动性/复杂度在别处", "发行方慷慨"]
+      answer: 1
+
+  - concept: liquidity
+    domain: basics
+    title: 什么是流动性？
+    prereq: []
+    importance: 4
+    body: |
+      流动性是"想用钱时能多快、以多小代价变现"。活期存款流动性最高；
+      定期存款提前支取损失利息；房产变现可能要数月并折价。
+    example: 紧急备用金必须放在高流动性资产里——因为急用钱的时间不可预测。
+    quiz:
+      q: 紧急备用金最适合放在？
+      options: ["房产", "活期/货币基金", "3 年期锁定产品"]
+      answer: 1
+
+  - concept: etf
+    domain: instruments
+    title: 什么是 ETF？
+    prereq: [inflation]
+    importance: 5
+    body: |
+      ETF（交易型开放式指数基金）像"一篮子股票"的一个份额，盘中随时买卖。
+      宽基 ETF 跟踪指数（如标普 500、日经 225），费用通常远低于主动基金。
+    example: 买 VOO ≈ 按市值比例买下 500 家美国大公司，无需选股。
+    quiz:
+      q: 宽基指数 ETF 的主要优点是？
+      options: ["保证跑赢市场", "低成本+天然分散", "没有波动"]
+      answer: 1
+
+  - concept: asset_allocation
+    domain: portfolio
+    title: 什么是资产配置？
+    prereq: [etf]
+    importance: 5
+    body: |
+      资产配置是决定"多少钱在股票、债券、现金、其他"的比例。
+      研究普遍显示，长期收益与波动的差异，大头来自配置比例而非选股择时。
+    example: 60/40 指 60% 股票+40% 债券；你的比例应匹配你的期限与风险容量。
+    quiz:
+      q: 对长期回报影响最大的决策通常是？
+      options: ["选哪只股票", "股债现金的比例", "哪一天买入"]
+      answer: 1
+
+  - concept: diversification
+    domain: portfolio
+    title: 什么是分散化？
+    prereq: [etf]
+    importance: 4
+    body: |
+      分散化是让"任何单一事件都伤不到你的全部财富"：跨资产、跨国家、跨币种、跨机构。
+      分散不是提高收益，而是砍掉"归零"型风险。
+    example: 账户+持仓+币种都集中在单一国家/机构时，一次监管或机构事件就是全仓风险。
+    quiz:
+      q: 分散化的目标是？
+      options: ["收益最大化", "降低单一事件的整体伤害", "消除一切风险"]
+      answer: 1
+
+  - concept: rebalancing
+    domain: portfolio
+    title: 什么是再平衡？
+    prereq: [asset_allocation]
+    importance: 4
+    body: |
+      再平衡是把涨跌后偏离的比例调回目标配置。它强制"高抛低吸"，
+      让组合风险回到你当初设计的水平。
+    example: 目标 60/40，股票大涨后变 70/30 → 卖股买债回到 60/40。
+    quiz:
+      q: 再平衡的本质是？
+      options: ["追涨杀跌", "纪律化的高抛低吸", "预测市场"]
+      answer: 1
+
+  - concept: money_market_fund
+    domain: instruments
+    title: 什么是货币市场基金？
+    prereq: [liquidity]
+    importance: 4
+    body: |
+      货基投资于短期存款/短期国债等，净值波动极小，收益跟随短端利率，
+      申赎通常 T+0/T+1。它是"现金的收益率升级版"，不是存款（不受存款保险）。
+    example: 美联储维持高利率时，美元货基年化可能显著高于活期。
+    quiz:
+      q: 货币市场基金与银行存款的关键区别是？
+      options: ["收益更高且保本", "不受存款保险保障", "流动性更差"]
+      answer: 1
+
+  - concept: tbill
+    domain: instruments
+    title: 什么是 Treasury Bill（短期国债）？
+    prereq: [money_market_fund]
+    importance: 4
+    body: |
+      T-Bill 是美国财政部发行的 ≤1 年期贴现国债，按面值折价买入、到期按面值兑付。
+      被视为"无信用风险"的美元资产之一，二级市场流动性极好。
+    example: 以 98.0 买入 3 个月期 T-Bill，到期兑 100，年化约 8.2%（示例数字）。
+    quiz:
+      q: T-Bill 的收益形式是？
+      options: ["每季度付息", "折价买入到期按面值兑付", "随股价波动"]
+      answer: 1
+
+  - concept: duration
+    domain: fixed_income
+    title: 什么是久期（Duration）？
+    prereq: [money_market_fund]
+    importance: 4
+    body: |
+      久期衡量债券价格对利率的敏感度：久期 5 年的债券，利率+1% → 价格约 -5%（近似）。
+      期限越长久期越大。持有到期则拿回面值，中间的波动只是"账面"的。
+    example: 同样加息 1%，1 年期定存几乎无感，30 年期国债可能跌 15%+。
+    quiz:
+      q: 利率上升时，久期越长的债券价格？
+      options: ["跌得越多", "跌得越少", "不变"]
+      answer: 0
+
+  - concept: fx_and_returns
+    domain: macro
+    title: 为什么汇率会影响我的收益？
+    prereq: [etf]
+    importance: 5
+    body: |
+      你持有外币资产的实际收益 = 资产本身涨跌 × 汇率变动。
+      即使日股上涨，若日元对你的本币贬值 10%，你的本币收益可能被吃掉大半。
+    example: 10% 的日股涨幅 - 8% 的日元贬值 ≈ 本币口径只赚约 1.2%。
+    quiz:
+      q: 外币资产的本币收益由什么决定？
+      options: ["只有资产涨跌", "资产涨跌×汇率变动", "只有汇率"]
+      answer: 1
+
+  # ── 合规与税务（香港居民 · 境外理财必备）─────────────
+  - concept: crs
+    domain: legal_tax
+    title: CRS 是什么？你的账户信息会报给谁？
+    prereq: []
+    importance: 5
+    body: |
+      CRS（共同申报准则）是 100 多个税收管辖区之间的金融账户信息自动交换机制，
+      香港 2018 年起参与。银行/券商每年识别账户持有人的"税务居民地"，
+      并把账户余额、利息股息、卖出所得报给该税务居民地的税务机关。
+      香港税务居民的信息报给香港税局（IRD）。关键：CRS 按"税务居民地"交换，
+      不是按国籍——税务居民地由各国规则判定（香港：通常为常住/住所地）。
+    example: 你在香港券商持有美股，券商先问你税务居民地（开户表里的 CRS 申报），
+      如实填写即可——申报≠交税，它只是信息交换。
+    quiz:
+      q: CRS 信息交换的依据是？
+      options: ["国籍", "税务居民地", "开户银行所在地"]
+      answer: 1
+
+  - concept: w8ben
+    domain: legal_tax
+    title: W-8BEN 与美股股息的 30% 预扣税
+    prereq: [crs]
+    importance: 5
+    body: |
+      W-8BEN 是交给美国券商/银行的表，声明"我不是美国人"，用于享受非美税务居民
+      的预扣税率。要点：① 美股股息会被美国预扣税——香港与中国内地之间与美国
+      都没有全面的股息税收优惠安排时按 30%（内地身份因中美税收协定为 10%）；
+      ② 资本利得（买卖差价）对非美税务居民不征美国税；③ 美国国债利息通常免税
+      （组合利息豁免）。表每 3 年左右要更新，地址变了要重交。
+    example: 收到 100 美元股息 → 券商自动扣 30 美元给 IRS，到你账上 70 美元。
+      这就是为什么有些港股/美股投资者偏好不派息的成长股或直接持有美债。
+    quiz:
+      q: 非美税务居民买卖美股的价差收益（资本利得）？
+      options: ["被美国征 30%", "一般不征美国税", "和股息一样预扣"]
+      answer: 1
+
+  - concept: hk_tax_basics
+    domain: legal_tax
+    title: 香港个人税速览：为什么适合理财
+    prereq: []
+    importance: 5
+    body: |
+      香港对个人：无资本利得税（炒股炒楼差价不交税，炒楼另有印花税/额外印花税），
+      无股息税，本地存款利息一般免税；薪俸税标准税率 15%（有两级累进与上限机制），
+      无销售税/VAT。买卖港股有印花税（买卖双方各 0.1%，2023 年 11 月起），
+      另有交易征费/交易费等小额费用。
+    example: 同样赚 1 万美元美股价差：香港税务居民 0 税；美国税务居民可能要交资本利得税。
+    quiz:
+      q: 香港税务居民买卖美股赚的差价？
+      options: ["交香港薪俸税", "香港不征资本利得税", "交 15%"]
+      answer: 1
+
+  - concept: us_estate_tax
+    domain: legal_tax
+    title: 别忽视：美股的美国遗产税风险
+    prereq: [w8ben]
+    importance: 4
+    body: |
+      非美税务居民持有的"美国资产"（美股、美债、美国基金）合计超过 6 万美元，
+      身故时可能面临美国遗产税（税率最高 40%，几乎没有免税额——只有 6 万美元门槛）。
+      香港与美国之间没有遗产税协定。常见缓解思路：控制美国资产比例、
+      用非美注册的同类指数产品替代（注意 ETF 的注册地要看 prospectus）、
+      人寿保险对冲等。涉及金额较大时务必咨询专业人士。
+    example: 100 万美元美股组合的身故传承成本可能高达数十万美元税负——
+      这是很多人没意识到的"隐形风险"。
+    quiz:
+      q: 非美税务居民持有美股的美国遗产税免税门槛约为？
+      options: ["6 万美元", "500 万美元", "没有门槛也不征"]
+      answer: 0
+
+  - concept: hk_investor_protection
+    domain: legal_tax
+    title: 香港的投资者保护网（钱放在哪才安全）
+    prereq: []
+    importance: 4
+    body: |
+      三层保护：① 银行存款——存款保障计划（DPS），每家银行每人 80 万港元上限
+      （2024 年 10 月起由 50 万上调）；② 券商——选 SFC 持牌经纪，违约时
+      投资者赔偿基金（ICF）每人每券商 50 万港元上限；③ 实物股票——港股可选择
+      实货股票/中央结算（CCASS）名义持有，了解你的股票登记方式。
+      分散不只针对市场风险，也针对机构风险。
+    example: 300 万现金放一家银行 → 只有 80 万受存保；分三家 → 每家的 80 万都受保。
+    quiz:
+      q: 香港存款保障计划目前的每人每行保障上限是？
+      options: ["50 万港元", "80 万港元", "100 万港元"]
+      answer: 1
+
+  - concept: fx_control_cn
+    domain: legal_tax
+    title: 资金涉及内地时的合规要点（如适用）
+    prereq: [crs]
+    importance: 4
+    body: |
+      若你的资金或身份涉及内地：① 内地居民每年有 5 万美元便利化购汇额度，
+      且购汇用途不含境外买房/证券投资（要合规需走其他路径，如 QDII）；
+      ② 若仍构成中国税务居民（户籍/经常居住地等），境外所得可能涉及申报义务；
+      ③ 移民不移籍不等于税务身份自动改变。规则复杂且会变——大额资金安排前
+      请咨询专业税务/法律人士，本课只提供概念框架。
+    example: 人在香港工作生活、资金在港赚取并存于港账户，一般不涉及内地购汇额度；
+      但若钱是从内地汇出投资，路径本身要合规。
+    quiz:
+      q: 内地居民每年便利化购汇额度是？
+      options: ["1 万美元", "5 万美元", "无限制"]
+      answer: 1

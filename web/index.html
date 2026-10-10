@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WealthOS · 你的私人财富情报系统</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <span class="brand">WealthOS</span>
+    <button data-tab="today" class="active">Today</button>
+    <button data-tab="roadmap">Roadmap</button>
+    <button data-tab="portfolio">Portfolio</button>
+    <button data-tab="research">Research</button>
+    <button data-tab="feed">Feed</button>
+    <button data-tab="learn">Learn</button>
+    <button data-tab="setup">⚙️ 接口</button>
+    <span class="spacer"></span>
+    <button id="btn-guide" class="guide-btn">❓ 指南</button>
+    <span id="freshness" class="freshness"></span>
+  </nav>
+</header>
+
+<div id="demo-banner" class="demo-banner" style="display:none">
+  🎭 演示模式：当前显示<b>示例数据</b>（账户名带「示例·」前缀），用于体验产品能力。
+  <button id="btn-demo-clear" class="linklike">开始记录我的真实资产 → 清除示例</button>
+</div>
+
+<!-- 零状态引导（无任何账户时显示） -->
+<section id="onboarding" style="display:none">
+  <div class="hero">
+    <h1>从 0 开始，完全没问题 👋</h1>
+    <p class="sub">你不需要任何券商账户或投资经验。财富管理的第一步只是：<b>知道自己现在有多少钱</b>。
+    先记下口袋里的现金和银行存款，系统会从这里开始为你建立财富画像——每天一条值得知道的信息、
+    一节 3 分钟的金融课，随着资产慢慢增长而成长。</p>
+    <div class="ob-cards">
+      <div class="ob-card" id="ob-cash">
+        <div class="ob-num">1</div>
+        <h3>记录第一笔资产</h3>
+        <p>现金、银行卡余额、支付宝/微信——有多少记多少，30 秒完成。</p>
+        <button class="primary">＋ 记录我的现金</button>
+      </div>
+      <div class="ob-card" id="ob-demo">
+        <div class="ob-num">2</div>
+        <h3>先看看它长什么样</h3>
+        <p>载入一套示例数据（港美股 + 多币种），体验晨报、敞口分析与课程，随时一键清除。</p>
+        <button>🎭 载入示例数据</button>
+      </div>
+      <div class="ob-card" id="ob-learn">
+        <div class="ob-num">3</div>
+        <h3>今天学第一课</h3>
+        <p>什么是复利？从零开始的人最该先懂这个。3 分钟，一节课一道题。</p>
+        <button>📖 开始第一课</button>
+      </div>
+    </div>
+    <p class="tiny">隐私：所有数据只存在你这台电脑上（本地 SQLite），不联网上传任何账户信息。</p>
+  </div>
+</section>
+
+<main>
+  <section id="tab-today" class="tab active">
+    <div id="brief-visual"></div>
+    <details class="raw-toggle"><summary>查看原始简报文本（含全部溯源标注）</summary>
+      <pre id="brief" class="brief"></pre>
+    </details>
+  </section>
+
+  <section id="tab-roadmap" class="tab">
+    <div id="roadmap-intro" class="card"></div>
+    <div id="roadmap-list"></div>
+  </section>
+
+  <section id="tab-portfolio" class="tab">
+    <div class="grid-2col">
+      <div id="nw" class="card"></div>
+      <div id="nw-chart" class="card"></div>
+    </div>
+    <div id="exposures" class="grid"></div>
+    <div id="accounts" class="card"></div>
+    <div class="row-actions">
+      <button id="btn-add-account" class="ghost">＋ 添加账户</button>
+      <button id="btn-add-holding" class="ghost">＋ 记录资产/持仓</button>
+    </div>
+  </section>
+
+  <section id="tab-research" class="tab">
+    <div id="research-list" class="card"></div>
+    <div id="research-reader"></div>
+  </section>
+
+  <section id="tab-feed" class="tab">
+    <div class="toolbar">
+      <label><input type="checkbox" id="only-relevant"> 只看与我相关 (relevance ≥ 0.05)</label>
+    </div>
+    <div id="feed-list"></div>
+  </section>
+
+  <section id="tab-learn" class="tab">
+    <div id="lesson" class="card lesson"></div>
+  </section>
+
+  <section id="tab-setup" class="tab">
+    <div id="setup-intro" class="card"></div>
+    <div id="setup-list"></div>
+  </section>
+</main>
+
+<button id="fab-run" title="运行摄取管线（行情+汇率+新闻）">⟳ 拉数据</button>
+<button id="fab-brief" title="生成今日简报">✦ 生成简报</button>
+
+<div id="chat-dock">
+  <div id="chat-log"></div>
+  <form id="chat-form"><input id="chat-input" placeholder="问我的钱：例如「我现在最该关注什么？」" autocomplete="off"><button>送出</button></form>
+</div>
+
+<dialog id="dlg-guide">
+  <h3>❓ 如何与我互动，实现财富的长期增值</h3>
+  <div class="guide-body">
+    <p><b>☀️ 每日循环（5 分钟）</b><br>
+    1. 打开 Today 读晨报（数据自动更新）；2. 完成 Learn 今日一课并答题；
+    3. 有疑问直接在底部对话框问（例：「我的现金占比多少」「日元为什么跌」）。</p>
+    <p><b>📅 每周循环（30 分钟）</b><br>
+    1. 读一篇 Research 研报精读（每周一自动更新观察名单）；2. 检视 Roadmap 进度；
+    3. 看 Portfolio 是否出现新的「值得研究的机会」。</p>
+    <p><b>📈 增值路径（系统的设计逻辑）</b><br>
+    记录真实资产 → 建立备用金（Roadmap 1）→ 现金管理（Roadmap 3）→
+    满足前提后小额定投宽基指数（Roadmap 4）→ 每年再平衡（Roadmap 5）。
+    系统不替你做决定——它让<b>你每个决定都有依据</b>。</p>
+    <p><b>🔌 建议打通的接口（按优先级）</b><br>
+    · <b>Telegram</b>（免费，10 分钟）：配置 token 后晨报/研报自动推送到手机；<br>
+    · <b>LLM Key</b>：OpenAI/Anthropic 任一，解锁 AI 模式（自然语言简报与对话）；<br>
+    · <b>券商 API</b>（开户后）：IBKR Flex Query / 长桥 / 老虎——持仓自动同步；<br>
+    · <b>FRED Key</b>（免费）：利率宏观数据增强；<br>
+    · <b>X API</b>（可选付费）：金融情报信号层。<br>
+    内地/香港银行暂无个人 API——用「导出 CSV → 拖入导入」覆盖。</p>
+    <p class="tiny">所有数据只存在这台电脑上；上述 key 都只进本机，不上传任何服务器。</p>
+  </div>
+  <div class="dlg-actions"><button class="primary" data-close>明白了</button></div>
+</dialog>
+
+<dialog id="dlg-account">
+  <form id="form-account" method="dialog">
+    <h3>添加账户</h3>
+    <label>账户名称<input name="name" required placeholder="如：招行储蓄卡 / 我的钱包现金"></label>
+    <label>机构<input name="institution" placeholder="如：招商银行（可留空）"></label>
+    <div class="form-row">
+      <label>币种<select name="currency">
+        <option>CNY</option><option>HKD</option><option>USD</option>
+        <option>JPY</option><option>SGD</option><option>EUR</option>
+      </select></label>
+      <label>类型<select name="account_type">
+        <option value="bank">银行</option><option value="cash">现金/钱包</option>
+        <option value="brokerage">券商</option><option value="property">房产</option>
+        <option value="crypto">加密钱包</option>
+      </select></label>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="ghost" data-close>取消</button>
+      <button class="primary" type="submit">创建</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-holding">
+  <form id="form-holding" method="dialog">
+    <h3>记录资产 / 持仓</h3>
+    <label>账户<select name="account" id="hold-account-select" required></select></label>
+    <label>内容<input name="symbol" required placeholder="现金填 CASH:CNY；股票填符号如 AAPL"></label>
+    <div class="form-row">
+      <label>数量<input name="quantity" type="number" step="any" required placeholder="如 50000"></label>
+      <label>币种<select name="currency">
+        <option>CNY</option><option>HKD</option><option>USD</option>
+        <option>JPY</option><option>SGD</option><option>EUR</option>
+      </select></label>
+    </div>
+    <div class="form-row">
+      <label>单价（现金留空）<input name="price" type="number" step="any" placeholder="现金=1"></label>
+      <label>日期<input name="as_of" type="date"></label>
+    </div>
+    <p class="tiny">提示：记录现金用 <code>CASH:币种</code>，数量就是金额。证券留空价格时，系统会自动按行情补价。</p>
+    <div class="dlg-actions">
+      <button type="button" class="ghost" data-close>取消</button>
+      <button class="primary" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/static/app.js?v=8"></script>
+</body>
+</html>

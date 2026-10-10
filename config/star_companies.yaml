@@ -1,0 +1,128 @@
+# 明星公司观察名单（Research 精读对象）
+# cik 为 null 表示无 SEC EDGAR 数据（如港股），精读降级为"行情+新闻+公告阅读指引"模式。
+# concepts: 本公司财报最适合学的知识点（读完后登记进知识图谱）
+
+companies:
+  - symbol: AAPL
+    cik: "0000320193"
+    name: Apple
+    cn_name: 苹果
+    sector: Technology
+    why: 全球市值最高的消费科技公司；财报结构清晰、现金流稳定，是学习"看财报"的最佳入门对象。
+    ir_url: https://investor.apple.com
+    concepts: [revenue_growth, gross_margin, eps, valuation]
+
+  - symbol: MSFT
+    cik: "0000789019"
+    name: Microsoft
+    cn_name: 微软
+    sector: Technology
+    why: 云+软件订阅模式的代表；看它学会什么叫"高毛利、高粘性"的商业模式。
+    ir_url: https://www.microsoft.com/investor
+    concepts: [revenue_growth, gross_margin, valuation]
+
+  - symbol: NVDA
+    cik: "0001045810"
+    name: NVIDIA
+    cn_name: 英伟达
+    sector: Semiconductors
+    why: AI 算力周期风向标；波动大、增长猛，适合学习"周期股与情绪"。
+    ir_url: https://investor.nvidia.com
+    concepts: [revenue_growth, eps, valuation, risk_return]
+
+  - symbol: GOOGL
+    cik: "0001652044"
+    name: Alphabet
+    cn_name: 谷歌
+    sector: Technology
+    why: 广告+AI 双引擎；学习"多元化巨头怎么看分部业务"。
+    ir_url: https://abc.xyz/investor
+    concepts: [revenue_growth, gross_margin]
+
+  - symbol: AMZN
+    cik: "0001018724"
+    name: Amazon
+    cn_name: 亚马逊
+    sector: Consumer / Cloud
+    why: 零售与 AWS 两种截然不同的生意装在一家公司里，是理解"分部估值"的教科书。
+    ir_url: https://ir.aboutamazon.com
+    concepts: [revenue_growth, operating_margin]
+
+  - symbol: TSLA
+    cik: "0001318605"
+    name: Tesla
+    cn_name: 特斯拉
+    sector: Auto / Energy
+    why: 情绪与叙事驱动的典型；用来学"故事与估值的距离"。
+    ir_url: https://ir.tesla.com
+    concepts: [valuation, risk_return]
+
+  - symbol: "0700.HK"
+    cik: null
+    name: Tencent
+    cn_name: 腾讯控股
+    sector: Technology
+    why: 中国互联网旗舰；港交所数据暂不可自动拉取，精读以行情+公告指引模式进行。
+    ir_url: https://www.tencent.com/investors
+    concepts: [revenue_growth, gross_margin]
+
+# 精读分节模板（每节的"怎么读"教学文案；数据由代码确定性计算填入）
+sections:
+  - id: revenue
+    title: 第 1 节 · 营收（Revenue）
+    teach: |-
+      营收是公司卖东西收到的总钱数，是一切的起点。
+      怎么读：① 看同比（YoY）——和去年同一季度比，剔除季节性；② 看增速是在加速还是减速。
+      常见误区：只看环比（QoQ）会圣诞季、春节效应骗到。
+    highlight: 同比增速 > 环比增速的可信度；营收增长但利润不涨，要警惕"以价换量"。
+    concept: revenue_growth
+  - id: eps
+    title: 第 2 节 · 每股收益（EPS）
+    teach: |-
+      EPS = 净利润 ÷ 总股本，代表"一股赚了多少钱"。它同时受两件事影响：生意赚不赚、股份多不多。
+      怎么读：对比 diluted（摊薄）口径；公司回购会减少股本、推高 EPS——这不完全是生意变好。
+    highlight: EPS 涨 ≠ 生意涨；拆开看"净利润变了还是股本变了"。
+    concept: eps
+  - id: gross_margin
+    title: 第 3 节 · 毛利率（Gross Margin）
+    teach: |-
+      毛利率 = 毛利润 ÷ 营收，衡量"扣掉直接成本后每一块钱收入剩多少"。
+      怎么读：和公司自己的历史比（趋势），和同行比（定价权）。毛利率持续抬升通常意味着产品力/议价力增强。
+    highlight: 毛利率是商业模式的基因——软件 70%+、芯片 50%+、零售可能只有个位数。
+    concept: gross_margin
+  - id: operating_margin
+    title: 第 4 节 · 经营利润率（Operating Margin）
+    teach: |-
+      在毛利基础上再扣掉研发、销售、管理费用，看"主业经营"到底赚多少。
+      怎么读：毛利率高但经营利润率低 → 钱被费用吃掉了（重研发？重营销？）。
+    highlight: 毛利率与经营利润率的差 = 费用控制的水平。
+    concept: operating_margin
+  - id: valuation
+    title: 第 5 节 · 估值上下文（P/E）
+    teach: |-
+      市盈率 P/E = 股价 ÷ 每股收益（TTM，最近四个季度）。粗略地说，它表示"按现在的盈利，多少年回本"。
+      怎么读：P/E 高 = 市场为"未来增长"付了高价；P/E 低不一定是便宜（可能是市场预期盈利要下滑）。
+    highlight: P/E 只是一个坐标系，不是答案；成长股高 P/E 的风险在于"增长不及预期时双杀"。
+    concept: valuation
+  - id: commentary
+    title: 第 6 节 · 管理层电话会怎么看（Guidance）
+    teach: |-
+      数字只能告诉你"过去"，电话会（Earnings Call）里的业绩指引才告诉你"公司怎么看未来"。
+      怎么读：重点听三件事——下季度营收/EPS 指引、管理层主动解释的负面项、被分析师追问最多的话题。
+      免费全文：Motley Fool transcripts / 各公司 IR 页（本系统的数据源调研已验证）。
+    highlight: 指引下调比本季 miss 更影响股价，因为股价定价的是未来。
+    concept: null
+  - id: changed
+    title: 第 7 节 · 这次变了什么（What changed）
+    teach: |-
+      每季财报真正值钱的是"变化"：哪个数字显著偏离趋势？偏离是暂时的还是结构性的？
+      怎么读：把本节列出的变化逐条问"为什么"，答案要去电话会里找。
+    highlight: 市场对"预期的变化"反应，而不是对"绝对好坏"反应。
+    concept: null
+  - id: relates
+    title: 第 8 节 · 与我有什么关系 + 本课小测
+    teach: |-
+      如果你持有它：这里的每个变化都在改变你的持仓理由是否还成立。
+      如果只是学习：明星公司是最好的教材——用真实数字巩固概念。
+    highlight: 看不懂的部分，回到 Learn 页补对应课程，再看一遍。
+    concept: null

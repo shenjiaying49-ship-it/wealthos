@@ -1,0 +1,12 @@
+# 用户画像（Personal Wealth Profile · H 报告）
+# 本文件描述你的背景，系统据此个性化路线图/简报/课程。随时可改。
+
+base_currency: HKD
+tax_residencies: [HK]              # 税务居民地（决定 CRS 申报去向、适用税制）
+residence: HK                      # 常住地
+jurisdictions_of_interest: [HK, US, SG, JP]   # 关注的市场/账户地区
+background_notes: |-
+  人在香港，可合法开设境外账户并进行境外理财操作。
+  适用香港个人税制（无资本利得税/股息税），美股涉及美国预扣税与遗产税规则。
+  若资金或身份涉及内地，需注意内地外汇与税务规则（见课程 fx_control_cn）。
+risk_profile: beginner             # 新手起步

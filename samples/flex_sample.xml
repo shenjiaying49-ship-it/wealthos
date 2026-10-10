@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexQueryResponse queryName="WealthOS" type="AF">
+<FlexStatements count="1">
+<FlexStatement accountId="U1234567" fromDate="20260101" toDate="20260930" period="20260101-20260930" whenGenerated="20261001T080000">
+<AccountInformation accountId="U1234567" currency="USD" accountType="INDIVIDUAL" customerType="Individual" />
+<CashBalances>
+<CashBalance accountId="U1234567" currency="USD" amount="9860.35" />
+<CashBalance accountId="U1234567" currency="JPY" amount="412000" />
+</CashBalances>
+<Positions>
+<Position accountId="U1234567" symbol="MSFT" securityType="STK" quantity="35" costBasis="14210.5" currency="USD" markPrice="415.20" positionValue="14532.00" openDate="20250412" />
+<Position accountId="U1234567" symbol="VOO" securityType="STK" quantity="20" costBasis="10180.0" currency="USD" markPrice="549.80" positionValue="10996.00" openDate="20250703" />
+</Positions>
+<Trades>
+<TradeConfirmation accountId="U1234567" symbol="MSFT" securityType="STK" tradeDate="20250412" quantity="35" tradePrice="406.10" ibCommission="1.0" currency="USD" />
+<TradeConfirmation accountId="U1234567" symbol="VOO" securityType="STK" tradeDate="20250703" quantity="20" tradePrice="509.0" ibCommission="1.0" currency="USD" />
+</Trades>
+<CorporateActions>
+<CorporateAction accountId="U1234567" symbol="MSFT" type="DIV" exDate="20260611" quantity="35" value="22.75" currency="USD" />
+</CorporateActions>
+</FlexStatement>
+</FlexStatements>
+</FlexQueryResponse>

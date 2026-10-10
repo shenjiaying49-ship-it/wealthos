@@ -1,0 +1,5 @@
+name,institution,country,currency,account_type,is_asset,opened_at
+IBKR Main,Interactive Brokers,US,USD,brokerage,true,2023-06-01
+长桥主账户,LongPort,HK,HKD,brokerage,true,2024-02-15
+本地银行储蓄,Bank of East Asia,HK,HKD,bank,true,2020-01-01
+日本现金账户,Japan Net Bank,JP,JPY,bank,true,2022-11-01
