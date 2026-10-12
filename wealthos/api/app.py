@@ -16,6 +16,7 @@ WEB_DIR = Path(__file__).resolve().parent.parent.parent / "web"
 class QuizAnswer(BaseModel):
     concept: str
     correct: bool
+    level: str = "easy"       # easy | hard
 
 
 class ChatIn(BaseModel):
@@ -194,13 +195,15 @@ def create_app() -> FastAPI:
         from ..agents import education
 
         with dbm.get_db() as db:
+            dbm._seed_lessons(db)  # 捡起新增课程（幂等）
             lesson = education.pick_lesson(db)
             if not lesson:
                 return {"done": True}
             return {"concept": lesson["concept"], "title": lesson["title"],
-                    "body": lesson["body"].strip(),
+                    "body": lesson["body"].strip(), "domain": lesson.get("domain"),
                     "relation": education.relation_to_portfolio(db, lesson["concept"]),
-                    "quiz": lesson.get("quiz"), "status": lesson.get("status")}
+                    "quiz": lesson.get("quiz"), "quiz_level": lesson.get("quiz_level", "easy"),
+                    "status": lesson.get("status")}
 
     @app.post("/api/lessons/answer")
     def lesson_answer(a: QuizAnswer):
@@ -214,12 +217,17 @@ def create_app() -> FastAPI:
             lesson = next((l for l in cfg["lessons"] if l["concept"] == a.concept), None)
             if not lesson:
                 raise HTTPException(404, "concept not found")
-            education.record_lesson(db, lesson, _today(), a.correct)
-            node = db.execute("SELECT status, mastery_score FROM knowledge_nodes "
-                              "WHERE concept=?", (a.concept,)).fetchone()
-            q = lesson.get("quiz") or {}
-            return {"status": node["status"], "mastery": node["mastery_score"],
-                    "answer": q.get("answer")}
+            r = education.record_lesson(db, lesson, _today(), a.correct, a.level)
+            return {"status": r["status"], "mastery": r["mastery"], "known": r["known"],
+                    "level": r["level"], "answer": (lesson.get("quiz") or {}).get("answer")}
+
+    @app.get("/api/lessons/progress")
+    def lessons_progress():
+        from ..agents import education
+
+        with dbm.get_db() as db:
+            dbm._seed_lessons(db)
+            return education.progress(db)
 
     @app.get("/api/roadmap")
     def roadmap():

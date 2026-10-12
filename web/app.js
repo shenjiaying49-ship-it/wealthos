@@ -382,24 +382,53 @@ async function loadFeed() {
 $("#only-relevant").addEventListener("change", () => loadFeed());
 
 /* ── Learn ─────────────────────────────────────────── */
+const DOMAIN_CN = { basics: "基础", instruments: "工具", portfolio: "组合",
+  fixed_income: "债券", macro: "宏观·汇率", legal_tax: "合规与税务",
+  micro_economics: "微观经济", macro_economics: "宏观经济", research: "研报概念" };
+
 async function loadLesson() {
   const l = await api("/api/lessons/today");
-  if (l.done) { $("#lesson").innerHTML = "<h2>课程库已学完一轮 🎉</h2><p class='muted'>月度测验与新课即将上线。</p>"; return; }
+  const prog = await api("/api/lessons/progress").catch(() => null);
+  if (l.done) { $("#lesson").innerHTML = "<h2>课程库已学完一轮 🎉</h2><p class='muted'>复习队列与月度测验即将上线。</p>"; return; }
+  const hard = l.quiz_level === "hard";
   $("#lesson").innerHTML = `
-    <h2>📖 ${esc(l.title)}</h2>
+    <h2>📖 ${esc(l.title)} ${hard ? '<span class="lvl-badge hard">⭐ 进阶</span>' : '<span class="lvl-badge">简单</span>'}</h2>
+    <p class="tiny">${esc(DOMAIN_CN[l.domain] || l.domain || "")} · 当前掌握度将随答题累积（0.8 即掌握）</p>
     <p style="white-space:pre-wrap">${esc(l.body)}</p>
     <div class="rel-note"><b>和我的资产的关系：</b>${esc(l.relation)}</div>
-    ${l.quiz ? `<div class="quiz"><b>小问题：${esc(l.quiz.q)}</b>${
-      l.quiz.options.map((o, idx) => `<button data-correct="${idx === l.quiz.answer}" data-concept="${esc(l.concept)}">${esc(o)}</button>`).join("")
+    ${l.quiz ? `<div class="quiz"><b>${hard ? "⭐ 场景应用题" : "小问题"}：${esc(l.quiz.q)}</b>${
+      l.quiz.options.map((o, idx) => `<button data-correct="${idx === l.quiz.answer}" data-concept="${esc(l.concept)}" data-level="${l.quiz_level}">${esc(o)}</button>`).join("")
     }</div>` : ""}`;
   $$(".quiz button").forEach((b) =>
     b.addEventListener("click", async () => {
       const correct = b.dataset.correct === "true";
       const r = await api("/api/lessons/answer", {
-        method: "POST", body: JSON.stringify({ concept: b.dataset.concept, correct }) });
-      alert(`${correct ? "✓ 正确" : "✗ 再想想"} · 掌握度 ${Math.round(r.mastery * 100)}%（状态: ${r.status}）`);
+        method: "POST", body: JSON.stringify({ concept: b.dataset.concept, correct,
+                                               level: b.dataset.level }) });
+      alert(`${correct ? "✓ 正确" : "✗ 再想想"} · 掌握度 ${Math.round(r.mastery * 100)}%`
+            + (r.known ? " 🎉 已掌握！进入复习队列" : `（${correct ? "继续强化" : "稳住"}，答到 80% 即掌握）`));
       loadLesson();
     }));
+  renderProgress(prog);
+}
+
+function renderProgress(prog) {
+  const box = $("#progress-card");
+  if (!prog || !box) return;
+  const doms = {};
+  prog.nodes.forEach(n => (doms[n.domain] = doms[n.domain] || []).push(n));
+  box.innerHTML = `
+    <h3>🧠 知识图谱进度 · 已掌握 ${prog.known}/${prog.total} · 平均 ${Math.round(prog.avg_mastery * 100)}%</h3>
+    ${Object.entries(doms).map(([d, nodes]) => `
+      <div class="prog-domain"><b>${esc(DOMAIN_CN[d] || d)}</b>
+        ${nodes.map(n => `
+          <div class="prog-row ${n.status}">
+            <span class="prog-k">${esc(n.concept)}</span>
+            <span class="prog-track"><span class="prog-fill ${n.status}"
+              style="width:${Math.round((n.mastery_score || 0) * 100)}%"></span></span>
+            <span class="prog-v">${n.status === "known" ? "✅" : n.status === "weak" ? "薄弱" : Math.round((n.mastery_score || 0) * 100) + "%"}</span>
+          </div>`).join("")}
+      </div>`).join("")}`;
 }
 
 /* ── Setup：接口打通中心（保姆级）─────────────────── */
